@@ -16,6 +16,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Load channels
+    socket.on('load channels', data => {
+        let i;
+        for (i = 0; i < data['channelsList'].length; i++) {
+            const li = document.createElement('li');
+            li.innerHTML = data['channelsList'][i];
+            $('#channels').append(li);
+        }
+    });
+
     // New user registered
     socket.on('user registered', data => {
         // TODO: Error handling
@@ -23,8 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#userName').text(localStorage.getItem('username'));
     });
 
-    // TODO: Implement adding of new channel
-    // TODO: Loading of channels
+    // Update channel list after creating a new channel
+    socket.on('add channel', data => {
+        update_channels(data)
+    });
 
     // Define behaviour of modal button
     $('#myModalButton').on('click', () => {
@@ -54,3 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#userName').text(localStorage.getItem('username'));
 });
+
+// Function definitions
+function update_channels(data) {
+    const li = document.createElement('li');
+    li.innerHTML = data.channel;
+    $('#channels').append(li);
+}

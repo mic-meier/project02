@@ -21,7 +21,7 @@ def index():
 
 @socketio.on("connect")
 def connect():
-    emit("load channels", {"channels": channels})
+    emit("load channels", {"channels": channels, "channelsList": channelsList})
 
 
 @socketio.on("new user")
@@ -44,7 +44,6 @@ def add_channel(data):
     else:
         channelsList.append(data["channel"])
         channels[data["channel"]] = []
-        print(channels)
         emit("add channel", {"channel": data["channel"]})
 
 
