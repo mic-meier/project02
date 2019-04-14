@@ -44,7 +44,7 @@ def add_channel(data):
     else:
         channelsList.append(data["channel"])
         channels[data["channel"]] = []
-        emit("add channel", {"channel": data["channel"]})
+        emit("add channel", {"channel": data["channel"]}, broadcast=True)
 
 
 if __name__ == '__main__':

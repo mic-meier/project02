@@ -20,9 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('load channels', data => {
         let i;
         for (i = 0; i < data['channelsList'].length; i++) {
-            const li = document.createElement('li');
-            li.innerHTML = data['channelsList'][i];
-            $('#channels').append(li);
+            let channel = data['channelsList'][i];
+            update_channels(channel);
         }
     });
 
@@ -35,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update channel list after creating a new channel
     socket.on('add channel', data => {
-        update_channels(data)
+        let channel = data.channel;
+        update_channels(channel);
     });
 
     // Define behaviour of modal button
@@ -70,6 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Function definitions
 function update_channels(data) {
     const li = document.createElement('li');
-    li.innerHTML = data.channel;
+    li.innerHTML = data;
     $('#channels').append(li);
 }
