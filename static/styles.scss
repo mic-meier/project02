@@ -1,0 +1,114 @@
+@function rem($value) {
+  @return unquote(($value/1px)/16+"rem");
+}
+
+$easeTime: 0.25s;
+$margin-top: 56px;
+
+$colors: ("mattBlackLight": "#303337",
+        "mattBlackDark": "#212121",
+        "mattGrey": "#878d8d",
+        "mattRed": "#ec6271"
+);
+
+@each $colorName, $colorValue in $colors {
+  .bg-#{$colorName} {
+    background-color: #{$colorValue};
+  }
+  .text-#{$colorName} {
+    color: #{$colorValue};
+  }
+  .bo-#{$colorName} {
+    border-color: #{$colorValue};
+  }
+}
+
+body {
+  @extend .bg-mattBlackDark;
+  @extend .text-mattGrey;
+}
+.wrapper {
+    margin-top: rem($margin-top);
+    .sideMenu {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      margin: rem($margin-top) auto auto;
+      width: rem(200px);
+      transition: all ease $easeTime;
+      transform: translateX(-100%);
+      z-index: 2000;
+    }
+  .content {
+    width: 100%;
+    margin-left: rem(0px);
+    transition: all ease $easeTime;
+  }
+}
+
+@media (min-width: 992px) {
+  .wrapper {
+    .sideMenu {
+      transform: translateX(0);
+    }
+    .content {
+      margin-left: rem(200px);
+    }
+  }
+}
+.nav-link {
+  display: block;
+  white-space: nowrap;
+  .icon {
+    margin-right: rem(4px);
+    font-size: rem(20px);
+    vertical-align: middle;
+    height: rem(32px);
+    width: rem(32px);
+    @extend .text-mattGrey;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .text {
+    font-size: rem(16px);
+    @extend .text-mattGrey
+  }
+  &:hover,
+  &.active {
+    @extend .bg-mattBlackDark;
+    .icon,
+    .text {
+      @extend .text-mattRed;
+    }
+  }
+}
+.nav-list {
+  display: block;
+  white-space: nowrap;
+  border-bottom: solid #878d8d 2px;
+  .icon {
+    margin-right: rem(4px);
+    font-size: rem(20px);
+    vertical-align: middle;
+    height: rem(32px);
+    width: rem(32px);
+    @extend .text-mattGrey;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .text {
+    font-size: rem(16px);
+    margin-left: rem(8px);
+    margin-bottom: rem(4px);
+    @extend .text-mattGrey
+  }
+}
+#messageInput {
+  @extend .bg-mattBlackDark;
+  @extend .bo-mattGrey;
+  bottom: 0;
+}

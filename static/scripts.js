@@ -57,11 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#newChannel').on('click', () => {
         // Define modal
         $('#myModal').modal('toggle');
-        // $('#myModal').modal({backdrop: 'static', keyboard: false});
-            $('#myModalTitle').text('New Channel');
-            $('#myModalLabel').text('Please enter a name for your channel:');
-            $('#myModalButton').text('Submit');
-            $('#myModalInput').val('');
+        $('#myModalTitle').text('New Channel');
+        $('#myModalLabel').text('Please enter a name for your channel:');
+        $('#myModalButton').text('Submit');
+        $('#myModalInput').val('');
     });
 
     $('#userName').text(localStorage.getItem('username'));
@@ -69,7 +68,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function definitions
 function update_channels(data) {
+    // Define list item
     const li = document.createElement('li');
-    li.innerHTML = data;
+    li.setAttribute('class', 'nav-item');
+    // Define anchor tag and append to list item
+    const a = document.createElement('a');
+    a.setAttribute('href', '#');
+    a.setAttribute('class', 'nav-link');
+    a.setAttribute('onclick', 'return false');
+    li.appendChild(a);
+    // Define i tag and append to anchor element
+    const i = document.createElement('i');
+    i.setAttribute( 'class', 'material-icons icon');
+    i.innerHTML = 'chat';
+    a.appendChild(i);
+    // Define span tag and append to anchor element
+    const span = document.createElement('span');
+    span.setAttribute('class', 'text');
+    span.innerHTML = data;
+    a.appendChild(span);
     $('#channels').append(li);
 }
