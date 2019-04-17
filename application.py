@@ -9,9 +9,9 @@ socketio = SocketIO(app)
 
 usernames = []
 usersDict = {}
-channelsList = ["General"]
+channelsList = ["General", "Test channel"]
 # TODO: Remove manually added channels after testing
-channels = {"General": ['Test message 1'], "Test channel": ["Test message 1", "Test message 2"]}
+channels = {"General": ['General channel message 1'], "Test channel": ["Test channel message 1", "Test message 2"]}
 
 
 @app.route("/")
@@ -44,7 +44,7 @@ def add_channel(data):
     else:
         channelsList.append(data["channel"])
         channels[data["channel"]] = []
-        emit("add channel", {"channel": data["channel"]}, broadcast=True)
+        emit("add channel", {"channel": data["channel"], "channels": channels}, broadcast=True)
 
 
 if __name__ == '__main__':
