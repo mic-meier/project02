@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('load channels', data => {
         let i;
         for (i = 0; i < data['channelsList'].length; i++) {
-            let room = data['channels'];
             let channel = data['channelsList'][i];
-            update_channels(channel, room);
-            show_channel(channel, room);
+            let rooms = data['rooms'];
+            update_channels(channel, rooms);
+            show_channel(channel, rooms);
         }
     });
 
@@ -36,22 +36,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update channel list after creating a new channel
     socket.on('add channel', data => {
-        let channel = data.channel;
-        let channels = data.channels;
-        update_channels(channel, channels);
+        let channel = data.addNewChannel;
+        let rooms = data.rooms;
+        update_channels(channel, rooms);
     });
 
     // Define behaviour of modal button
     $('#myModalButton').on('click', () => {
         // Behaviour when no user name in local storage
         if(!localStorage.getItem('username')) {
-            var username = $('#myModalInput').val();
+            let username = $('#myModalInput').val();
             socket.emit('new user', {'username': username});
             $('#myModal').modal('hide');
         }
         else {
-            var channel = $('#myModalInput').val();
-            socket.emit('add channel', {'channel': channel});
+            let newChannel = $('#myModalInput').val();
+            socket.emit('add channel', {'newChannel': newChannel});
             $('#myModal').modal('hide');
         }
     });
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Function definitions
-function update_channels(channel, channels) {
+function update_channels(channel, rooms) {
     // Define list item
     const li = document.createElement('li');
     li.setAttribute('class', 'nav-item');
@@ -92,19 +92,32 @@ function update_channels(channel, channels) {
     span.innerHTML = channel;
     a.appendChild(span);
     $('#channels').append(li);
-    li.onclick = click_channel(channel, channels);
+    // Adding onclick event to generated element
+    li.onclick = click_channel(channel, rooms);
 }
 
-function show_channel(channel, channels) {
+function show_channel(channel, rooms) {
     document.getElementById(channel).onclick = function() {
-
-        console.log(channel);
-        console.log(channels[channel][0]);
+        // Create div to hold the messages and insert into DOM
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'messages';
+        $('#messages').replaceWitbashh(messageDiv);
+        // Get at each individual message
+        let i = 0;
+        for (i; i < rooms[channel].length; i++) {
+           show_message(rooms[channel][i]);
+        }
         return false;
     }
 }
 
-function click_channel(channel, channels) {
-    show_channel(channel, channels);
+function click_channel(channel, rooms) {
+    show_channel(channel, rooms);
     return false;
+}
+
+function show_message(message) {
+    const p = document.createElement('p');
+    p.innerHTML = message;
+    $('#messages').append(p);
 }

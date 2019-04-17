@@ -11,7 +11,7 @@ usernames = []
 usersDict = {}
 channelsList = ["General", "Test channel"]
 # TODO: Remove manually added channels after testing
-channels = {"General": ['General channel message 1'], "Test channel": ["Test channel message 1", "Test message 2"]}
+rooms = {"General": ['General channel message 1'], "Test channel": ["Test channel message 1", "Test message 2"]}
 
 
 @app.route("/")
@@ -21,7 +21,7 @@ def index():
 
 @socketio.on("connect")
 def connect():
-    emit("load channels", {"channels": channels, "channelsList": channelsList})
+    emit("load channels", {"rooms": rooms, "channelsList": channelsList})
 
 
 @socketio.on("new user")
@@ -38,13 +38,13 @@ def new_user(data):
 
 @socketio.on('add channel')
 def add_channel(data):
-    if data["channel"] in channelsList:
+    if data["newChannel"] in channelsList:
         # TODO: Error handling
         pass
     else:
-        channelsList.append(data["channel"])
-        channels[data["channel"]] = []
-        emit("add channel", {"channel": data["channel"], "channels": channels}, broadcast=True)
+        channelsList.append(data["newChannel"])
+        rooms[data["newChannel"]] = []
+        emit("add channel", {"addNewChannel": data["newChannel"], "rooms": rooms}, broadcast=True)
 
 
 if __name__ == '__main__':
