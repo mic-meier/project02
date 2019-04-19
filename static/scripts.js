@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Set variables for modal button and input
+    const modalButton = document.getElementById('myModalButton');
+    const modalInput = document.getElementById('myModalInput');
+
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -11,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
             $('#myModal').modal({backdrop: 'static', keyboard: false});
             $('#myModalTitle').text('Register');
             $('#myModalLabel').text('Please enter a user name:');
-            $('#myModalButton').text('Submit');
             $('#myModalInput').val('');
+            modalButton.disabled = true;
         }
     });
 
@@ -41,19 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
         update_channels(channel, rooms);
     });
 
-    // Define behaviour of modal button
-    $('#myModalButton').on('click', () => {
-        // Behaviour when no user name in local storage
-        if(!localStorage.getItem('username')) {
-            let username = $('#myModalInput').val();
-            socket.emit('new user', {'username': username});
-            $('#myModal').modal('hide');
+    modalInput.addEventListener('keyup', function (event) {
+        if (this.value.length > 0) {
+            modalButton.disabled = false;
+            if (event.key === 'Enter') {
+                modalButton.click();
+            }
         }
         else {
-            let newChannel = $('#myModalInput').val();
-            socket.emit('add channel', {'newChannel': newChannel});
-            $('#myModal').modal('hide');
+            modalButton.disabled = true;
         }
+    });
+
+    modalButton.addEventListener('click', function () {
+        submit(socket);
     });
 
     // Create new channel
@@ -62,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#myModal').modal('toggle');
         $('#myModalTitle').text('New Channel');
         $('#myModalLabel').text('Please enter a name for your channel:');
-        $('#myModalButton').text('Submit');
         $('#myModalInput').val('');
+        modalButton.disabled = true;
     });
 
     $('#userName').text(localStorage.getItem('username'));
@@ -101,7 +106,7 @@ function show_channel(channel, rooms) {
         // Create div to hold the messages and insert into DOM
         const messageDiv = document.createElement('div');
         messageDiv.id = 'messages';
-        $('#messages').replaceWitbashh(messageDiv);
+        $('#messages').replaceWith(messageDiv);
         // Get at each individual message
         let i = 0;
         for (i; i < rooms[channel].length; i++) {
@@ -120,4 +125,18 @@ function show_message(message) {
     const p = document.createElement('p');
     p.innerHTML = message;
     $('#messages').append(p);
+}
+
+function submit(socket) {
+     // Behaviour when no user name in local storage
+        if(!localStorage.getItem('username')) {
+            let username = $('#myModalInput').val();
+            socket.emit('new user', {'username': username});
+            $('#myModal').modal('hide');
+        }
+        else {
+            let newChannel = $('#myModalInput').val();
+            socket.emit('add channel', {'newChannel': newChannel});
+            $('#myModal').modal('hide');
+        }
 }
