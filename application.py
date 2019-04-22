@@ -47,5 +47,15 @@ def add_channel(data):
         emit("add channel", {"addNewChannel": data["newChannel"], "rooms": rooms}, broadcast=True)
 
 
+@socketio.on('join room')
+def join__a_room(data):
+    room = data["channel"]
+    username = data["username"]
+    join_room(room)
+    print('call received')
+    emit("joined room", {"message": f'{username} has joined the room.'}, room=room, broadcast=True)
+    print('message emitted')
+
+
 if __name__ == '__main__':
     socketio.run(app)
