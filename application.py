@@ -12,6 +12,7 @@ usersDict = {}
 channelsList = ["General", "Test channel"]
 # TODO: Remove manually added channels after testing
 rooms = {"General": ['General channel message 1'], "Test channel": ["Test channel message 1", "Test message 2"]}
+MAXIMUM = 100
 
 
 @app.route("/")
@@ -50,11 +51,22 @@ def add_channel(data):
 @socketio.on('join room')
 def join__a_room(data):
     room = data["channel"]
-    username = data["username"]
     join_room(room)
-    print('call received')
-    emit("joined room", {"message": f'{username} has joined the room.'}, room=room, broadcast=True)
-    print('message emitted')
+    emit("joined room", {"rooms": rooms, "channel": data["channel"]}, room=room)
+
+
+@socketio.on('new message')
+def new_message(data):
+    username = data['username']
+    room = data['activeChannel']
+    message = data['message']
+    hour = data['hour']
+    minute = data['minute']
+    time = f'{hour}:{minute}'
+    if len(rooms[room]) >= MAXIMUM:
+        rooms[room].pop(0)
+    rooms[room].append(f'{username} ({time}): {message}')
+    emit('new message', {"message": rooms[room][-1]}, room=room, broadcast=True)
 
 
 if __name__ == '__main__':

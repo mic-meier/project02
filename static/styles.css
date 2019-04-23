@@ -38,7 +38,7 @@
   background-color: #ec6271;
 }
 
-.text-mattRed, .nav-link:hover .icon,
+.text-mattRed, #messageInput, .nav-link:hover .icon,
 .nav-link:hover .text, .nav-link.active .icon,
 .nav-link.active .text {
   color: #ec6271;
